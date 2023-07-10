@@ -1,2 +1,2 @@
-# sudorem
-My blog thingy.
+# import-pandas-as-numpy.github.io
+My personal blog. 
