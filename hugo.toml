@@ -9,7 +9,7 @@ pluralizelisttitles = false   # removes the automatically appended "s" on sideba
 
 [params]
 brand = "sudo Rem"                      # name of your site - appears in the sidebar
-brand_image = "hydra-logo.svg"    # path to the image shown in the sidebar
+brand_image = "/avatar.svg"    # path to the image shown in the sidebar
 description = "Malware analysis and cybersecurity raving." # Used as default meta description if not specified in front matter
 dark_mode = true                      # optional - defaults to false
 # favicon = "favicon.png"             # path to favicon (defaults to favicon.png)
