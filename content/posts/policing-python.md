@@ -5,8 +5,6 @@ draft: false
 series: Policing Python
 ---
 
-## Introduction
-
 Open source security is something fairly important to me. Ensuring individuals have the ability to learn and develop their skills in a secure environment is something I believe everyone has an entitled right to. Unfortunately, the overwhelmingly vast majority of new users are overwhelmed by the options they might find on open source sharing sites and package indexes such as GitHub and the Python Package Index (PyPI).
 
 This overwhelmed feeling can lead to an increased vulnerability for new users to attacks such as typosquatting and dependency confusion. The unfortunate reality is that this presents a barrier to entry that many people may not necessarily even know exists-- that is, identifying and selecting quality dependencies is an acquired skill.
