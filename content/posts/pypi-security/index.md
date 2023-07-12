@@ -3,6 +3,7 @@ title: "PyPI Security"
 date: 2023-07-12T08:22:22-05:00
 draft: false
 series: Policing Python
+tags: ['python','pypi']
 ---
 
 To those that may or may not know, [Vipyr Security](https://github.com/vipyrsec) was recently invited to discuss what a [malicious package reporting API](https://blog.pypi.org/posts/2023-06-22-malware-detection-project/) might look like with the Python Software Foundation and Python Packaging oversight entities. Frankly, this is pretty cool. A step towards legitimacy, if you will. We have a lot of ideas (some of which I intend to discuss in this article). **BUT** I harbor concerns about the lifecycle of an ecosystem that relies entirely on third party reports to police the platform. We've largely held the belief that utilizing the open source community itself to secure the open source community is one of the more effective ways to tame a near endless torrent of malware. However, this comes at a cost, both in the literal sense, as the monetary burden of shifting antimalware services and detection away from the oversight body, as well as an implicit cost of organizational stability. Let's discuss.
