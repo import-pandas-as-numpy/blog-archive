@@ -4,6 +4,8 @@ date: 2023-07-12T14:05:32-05:00
 draft: false
 series: Malware Analysis
 tags: ['python','malware','deobfuscation']
+description: "Looking deeper into PyArmor obfuscated malware utilizing tools such as Process Monitor and Wireshark, and hooking third party libraries to gain access to web requests and encrypted data."
+summary: "Looking deeper into PyArmor obfuscated malware utilizing tools such as Process Monitor and Wireshark, and hooking third party libraries to gain access to web requests and encrypted data."
 ---
 
 Before I begin, a gentle shoutout to Lockness Ko, our dynamic analysis specialist, for his assistance with the dynamic analysis portion of this particular malicious package.
