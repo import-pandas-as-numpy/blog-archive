@@ -3,6 +3,7 @@ title: "The Challenges of YARA"
 date: 2023-07-11T12:08:09-05:00
 draft: false
 series: Policing Python
+tags: ['python']
 ---
 
 Open source security is something fairly important to me. Ensuring individuals have the ability to learn and develop their skills in a secure environment is something I believe everyone has an entitled right to. Unfortunately, the overwhelmingly vast majority of new users are overwhelmed by the options they might find on open source sharing sites and package indexes such as GitHub and the Python Package Index (PyPI).
