@@ -1,5 +1,5 @@
 ---
-title: "PyArmor'nt"
+title: "Dearmored"
 date: 2023-07-12T14:05:32-05:00
 draft: false
 series: Malware Analysis
