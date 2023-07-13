@@ -70,7 +70,7 @@ This creates a WScript Shell, which invokes **inst.pyw**. We're now at Russian n
 
 So with our static unpackers struggling to work through the PyArmor obfuscation, we shifted to dynamic analysis. I mentioned Lockness Ko earlier in the article; he was kind enough to lend a Dynamic Analysis sandbox for the next portion. We began as most dynamic analysis solutions do-- spinning up PCAP and packet sniffing software, turning on ProcMon and running the program. The first time we managed to get the program to run in the sandbox, Wireshark immediately died. A good indicator that we're dealing with something that's attempting to enumerate the virtual machine. We moved network monitoring out of the sandbox and tried again... 
 And not much happened. We killed the process and pulled up ProcMon to see if there was something we were missing, but we weren't catching a whole lot. So in the spirit of seeing if this was some sort of delayed execution, we went ahead and ran the file one more time and let it sit for what felt like an eternity. And we waited. And we waited. And at last, we had something. ProcMon started firing off system events for enumeration of the current environment: 
-```python
+```plaintext
 "10:09:44.5260407 PM","WScript.exe","3396","Process Create","C:\Windows\System32\cmd.exe","SUCCESS","PID: 4292, Command line: ""C:\Windows\System32\cmd.exe"" /c pythonw C:\ProgramData\Install\inst.pyw"
 "10:09:45.6561948 PM","pythonw.exe","5020","Process Create","C:\Program Files\Python311\Scripts\pip.exe","SUCCESS","PID: 1188, Command line: pip install requests"
 "10:09:52.1659818 PM","pythonw.exe","5020","Process Create","C:\Program Files\Python311\Scripts\pip.exe","SUCCESS","PID: 2064, Command line: pip install cryptography"
@@ -97,7 +97,7 @@ def post(url, data=None, json=None, **kwargs):
 ```
 
 Running this, as anticipated, caused any POSTs utilizing the Python Requests package to write themselves to a file. We went ahead and ran the script again and... 
-```python
+```plaintext
 REQUEST
 xxxx://xxxx.tor.pm/
 {'1': 'gAAAAABkoRHTIO_HSkSBxDbFaarHWwX8T1qKIUgbuhaf0-294oY_TR1RuYFPVXYBkG5lQIKw2rRV7oPxL-CaKsiPerMKdwV5sUO1MEn3GZw3RToeSQXqvYo=', 
@@ -106,7 +106,7 @@ xxxx://xxxx.tor.pm/
 
 And that's not shockingly helpful. However, we do have some excellent pretext for what this information might actually be! If you recall earlier, the **cryptography** package was installed during the execution of the malware. Fernet is a very common cryptography format used in Python, and more importantly, the `gAAAAAB`refers to a fairly fixed portion, the "fixed" timestamp. This allowed us to confirm that these were indeed Fernet encrypted payloads. For those unfamiliar with Fernet, it is a symmetric encryption algorithm utilizing a key. For our purposes, that is the brief of it. For those looking to read more, you can find a writeup on Fernet encryption in the [PYCA Cryptography documents](https://cryptography.io/en/latest/fernet/). Equipped with that information, we went ahead and enumerated the Cryptography package as well. Utilizing the same techniques we used in the requests modification, we hooked the `generate_key()` and `encrypt()` functions to also write their arguments to a file. So, for one final, time, we went ahead and ran the program, with all the appropriate functions hooked. And it worked perfectly! 
 
-```python
+```plaintext
 ========
 model vbox harddisk  
 ==============
