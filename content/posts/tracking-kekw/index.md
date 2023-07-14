@@ -36,7 +36,7 @@ While this may seem like small fish in the grand scheme of things; a bunch of sc
 
 On top of that, these packages often squat common library names in dependancy confusion type attacks, whereby a user intending to install a SQLite or Cryptographic package may inadvertently install these malicious packages instead. The effects are obvious-- from leaked password information to leaked business intelligence. While these may not be the target demographics, the threat against average users is still very much real. 
 
-Prompting this blog post was the emergence of a new attack on the Python Package Index by the Kekw threat actor group utilizing the GitHub names [mmatthew130](https://github.com/mmatthew130) and [wieselnuggis](https://github.com/wiselnuggis). Vipyr Security remains in coordination with appropriate adminstrators across the open source security spectrum to detect and prevent these types of attacks. 
+Prompting this blog post was the emergence of a new attack on the Python Package Index by the Kekw threat actor group utilizing the GitHub names [mmatthew130](https://github.com/mmatthew130) and [wieselnuggis](https://github.com/wieselnuggis). Vipyr Security remains in coordination with appropriate adminstrators across the open source security spectrum to detect and prevent these types of attacks. 
 
 ## Additional Reading
 
