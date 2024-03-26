@@ -1,5 +1,5 @@
 ---
-title: "Pico CTF 24 - rsa_oracle"
+title: "Pico CTF 24 - weirdSnake"
 date: 2024-03-26T16:00:00-05:00
 draft: false
 tags: ['ctf','pico','reverse engineering']
