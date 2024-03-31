@@ -3,7 +3,8 @@ title: "Pico CTF 24 - dont-you-love-banners"
 date: 2024-03-26T16:00:00-05:00
 draft: false
 tags: ['ctf','pico','general']
-summary: "Abusing symlinks to include and subsequently display banners."
+series: PicoCTF 2024
+summary: "Abusing symlinks to include and subsequently display arbitrary textfiles in place of standard SSH banners."
 ---
 
 ## Introduction

@@ -3,6 +3,7 @@ title: "Pico CTF 24 - rsa_oracle"
 date: 2024-03-26T16:00:00-05:00
 draft: false
 tags: ['ctf','pico','cryptography']
+series: PicoCTF 2024
 summary: "Implementing a known plaintext attack utilizing an RSA oracle."
 ---
 
@@ -121,11 +122,10 @@ We see some very familiar variables here. We can pass the public exponent, modul
 Plugging in our information, we are given a message to send to the rsa oracle. When we receive our response, we need to pass back the **base 10** or decimal converted value back to RSHack.
 
 ```plaintext
-
-        [*] Please send the following ciphertext to the server: 241054478552663348609287639876876182397364722944
-        [*] What's the result? 491317127782
-        [+] The plaintext is: 245658563891
-        [+] The interpreted plaintext: 92d53
+[*] Please send the following ciphertext to the server: 241054478552663348609287639876876182397364722944
+[*] What's the result? 491317127782
+[+] The plaintext is: 245658563891
+[+] The interpreted plaintext: 92d53
 ```
 
 We can then use this plaintext key to decrypt our file.
