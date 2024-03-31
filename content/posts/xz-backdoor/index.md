@@ -113,7 +113,7 @@ I would generally encourage individuals to get involved not only with the develo
 Semgrep can act as excellent ways to amplify your sphere of influence as an application security professional or cybersecurity-inclined software engineer across
 a massive amoung of data.
 
-I'll never pretend to be a developer. My ability to produce code is limited at best, and I have all loose syntactic recognition of most languages aside from
+I'll never pretend to be a developer. My ability to produce code is limited at best, and I have all but a loose syntactic recognition of most languages aside from
 Java and Python. But what I do know is that I can take a demonstration of a vulnerability, write a [Semgrep](https://semgrep.dev/) rule, and apply that knowledge across virtually
 any codebase that I'd be interested in.
 
