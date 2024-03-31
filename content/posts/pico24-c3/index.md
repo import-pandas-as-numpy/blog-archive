@@ -3,6 +3,7 @@ title: "Pico CTF 24 - C3"
 date: 2024-03-26T16:00:00-05:00
 draft: false
 tags: ['ctf','pico','cryptography']
+series: PicoCTF 2024
 summary: "Working through security by obscurity with the PicoCTF 2024 C3 challenge."
 ---
 

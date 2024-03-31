@@ -3,6 +3,7 @@ title: "Pico CTF 24 - rsa_oracle"
 date: 2024-03-26T16:00:00-05:00
 draft: false
 tags: ['ctf','pico','cryptography']
+series: PicoCTF 2024
 summary: "Implementing a known plaintext attack utilizing an RSA oracle."
 ---
 

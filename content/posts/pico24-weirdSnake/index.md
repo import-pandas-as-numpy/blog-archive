@@ -3,6 +3,7 @@ title: "Pico CTF 24 - weirdSnake"
 date: 2024-03-26T16:00:00-05:00
 draft: false
 tags: ['ctf','pico','reverse engineering']
+series: PicoCTF 2024
 summary: "Reverse engineering disassembled Python bytecode back to the original code."
 ---
 
