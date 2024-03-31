@@ -81,7 +81,7 @@ The function takes pairs of plaintext and ciphertext values and calculates this 
 
 So with that information in hand (and some writing liberties from ChatGPT to explain this better than I think I attempted to the first few times I wrote this) we should be able to derive the modulus N.
 
-And we can! Our program gives us `5507598452356422225755194020880876452588463543445995226287547479009566151786764261801368190219042978883834809435145954028371516656752643743433517325277971`! And if we want to cross check our math, we can go ahead and just...
+And we can! Our program gives us `5507598452...`! And if we want to cross check our math, we can go ahead and just...
 
 ```python
 pow(0x30, 65537, 5507598452356422225755194020880876452588463543445995226287547479009566151786764261801368190219042978883834809435145954028371516656752643743433517325277971)

